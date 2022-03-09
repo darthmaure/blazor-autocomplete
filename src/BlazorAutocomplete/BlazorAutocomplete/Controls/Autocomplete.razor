@@ -1,0 +1,141 @@
+﻿@inherits InputText
+
+<input @attributes="AdditionalAttributes" 
+       class="@CssClass" 
+       @bind="Text" 
+       @bind:event="oninput" 
+       @onkeydown="OnKeyDown"
+       @onfocusout="OnLostFocus"
+       placeholder="@Placeholder"
+       aria-autocomplete="list" aria-haspopup="true" autocomplete="off" role="combobox"
+       aria-expanded="true"/>
+@if (autocomplete?.Any() == true)
+{
+    <div class="autocomplete-panel">
+        <ul role="listbox" class="autocomplete-items">
+        @foreach(var item in autocomplete)
+        {
+                var className = item.IsSelected ? "autocomplete-item-hover" : "";
+                <li role="option" class="autocomplete-item @className" 
+                    @onclick="(() => AutocompleteItemClick(item.Text))"
+                    @onmouseover="(() => AutocompleteMouseOver(item.Text))">@item.Text</li>
+        }
+        </ul>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public List<string> Source { get; set; } = new List<string>();
+
+    [Parameter]
+    public string? Placeholder { get; set; }
+
+    [Parameter]
+    public int MinTextLength { get; set; } = 2;
+
+    private List<AutocompleteItem>? autocomplete { get; set; }
+
+    private string text = "";
+
+    private string Text
+    {
+        get => text;
+        set
+        {
+            text = value;
+            CurrentValueAsString = value;
+            SetAutocomplete();
+        }
+    }
+
+    private void OnKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "ArrowDown")         
+        {
+            SelectNextItem();
+        }
+        else if (e.Key == "ArrowUp")
+        {
+            SelectPreviousItem();
+        }
+        else if (e.Key == "Enter" && autocomplete?.Any(d => d.IsSelected) == true)
+        {
+            AutocompleteItemClick(autocomplete.First(d => d.IsSelected).Text);
+        }
+        else if (e.Key == "Escape")
+        {
+            autocomplete = default;
+        }
+    }
+
+    private void OnLostFocus() => autocomplete = default;
+
+    private void SetAutocomplete()
+    {
+        autocomplete = text?.Length > MinTextLength
+        ? Source.Where(d => d.Contains(text, StringComparison.InvariantCultureIgnoreCase))
+                .Select(d => new AutocompleteItem { Text = d })
+                .ToList()
+        : default;
+    }
+
+    private void AutocompleteItemClick(string item)
+    {
+        Text = item;
+        autocomplete = default;
+    }
+
+    private void AutocompleteMouseOver(string item) => autocomplete?.ForEach(d => d.IsSelected = false);
+
+    private void SelectNextItem()
+    {
+        if (autocomplete?.Any() == true)
+        {
+            var prevItem = autocomplete.FirstOrDefault(d => d.IsSelected);
+            if (prevItem is null)
+            {
+                autocomplete.First().IsSelected = true;
+            }
+            else
+            {
+                var index = autocomplete.IndexOf(prevItem);
+                if (index < autocomplete.Count - 1)
+                {
+                    prevItem.IsSelected = false;
+                    autocomplete.ElementAt(index + 1).IsSelected = true;
+                }
+            }
+        }
+    }
+
+    private void SelectPreviousItem()
+    {
+        if (autocomplete?.Any() == true)
+        {
+            var currentItem = autocomplete.FirstOrDefault(d => d.IsSelected);
+            if (currentItem is null)
+            {
+                autocomplete.Last().IsSelected = true;
+            }
+            else
+            {
+                var index = autocomplete.IndexOf(currentItem);
+                if (index > 0)
+                {
+                    currentItem.IsSelected = false; 
+                    autocomplete.ElementAt(index - 1).IsSelected = true;
+                }
+            }
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if (string.IsNullOrEmpty(Text) && base.Value is not null)
+        {
+            Text = Value;            
+        }
+    }
+}

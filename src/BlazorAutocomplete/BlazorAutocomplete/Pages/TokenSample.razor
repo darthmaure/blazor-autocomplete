@@ -1,0 +1,39 @@
+﻿@page "/tokens"
+
+<PageTitle>Tokens Sample</PageTitle>
+
+<h1>Tokens</h1>
+
+<br />
+<div class="card">
+    <div class="card-header">
+        <span>Edit Book Sample</span>
+    </div>
+    <div class="card-body">
+        <EditForm Model="@Model">
+            <div class="form-group">
+                <InputText @bind-Value="Model.Title" class="form-control" />
+            </div>
+            <br />
+            <div class="form-group">
+                <InputDate @bind-Value="Model.Date" class="form-control" />
+            </div>
+            <br />
+            <div class="form-group">
+                <TokenInput InputPlaceholder="new tag..." @bind-Tokens="Model.Tags" />
+            </div>
+            <br />
+            <span>Tokens count: @Model.Tags.Count</span>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+
+    private Book Model = new Book
+        {
+            Title = "The Colour of Magic",
+            Date = new DateTime(1983, 12, 24),
+            Tags = new List<string> { "fantasy", "discworld", "Terry Pratchett", "Rincewind" }
+        };
+}

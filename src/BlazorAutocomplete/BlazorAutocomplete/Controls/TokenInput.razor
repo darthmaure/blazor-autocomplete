@@ -1,0 +1,116 @@
+﻿@using System.Collections.ObjectModel
+<div style="flex-wrap:wrap; padding: 2px;" class="@GetRootCssClass()">
+    @if (Tokens != null)
+    {
+        @foreach (var token in Tokens.Where(t => !string.IsNullOrWhiteSpace(t)).Distinct())
+        {
+            <span class="@GetTokenItemCssClass()" @onclick="() => OnTokenClick(token)" key="@token">@token</span>
+        }
+
+    }
+    @if (!IsReadonly)
+    {
+        <input type="text" 
+                @onkeydown="OnInputKeyDown" @onkeydown:preventDefault="suppressFlag" 
+                @bind="currentInput" @bind:event="oninput" 
+                class="token-input" 
+                placeholder="@InputPlaceholder"/>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public IList<string> Tokens
+    {
+        get => tokens;
+        set
+        {
+            if (tokens?.SequenceEqual(value ?? new List<string>()) == true)
+            {
+                return;   
+            }
+            tokens = value ?? new List<string>();
+            TokensChanged.InvokeAsync(value);
+        }
+    }
+
+    [Parameter]
+    public EventCallback<IList<string>> TokensChanged { get; set; }
+
+    [Parameter]
+    public bool IsReadonly { get; set; }
+
+    [Parameter]
+    public bool ExistingOnly { get; set; }
+
+    [Parameter]
+    public string? InputPlaceholder { get; set; }
+
+    [Parameter]
+    public List<string>? TokensAutocomplete { get; set; }
+
+    [Parameter]
+    public string CssClass { get; set; } = "";
+
+    [Parameter]
+    public string TokenItemCssClass { get; set; } = "";
+
+    private string currentInput { get; set; } = "";
+    private bool suppressFlag = false;
+    private IList<string> tokens = new List<string>();
+
+    private string[] confirmKeys = new[] { ";", "Tab", "Enter" };
+
+    private void OnInputKeyDown(KeyboardEventArgs e)
+    {
+        if (confirmKeys.Contains(e.Key))
+        {
+            AddNewToken(currentInput, e.Key);
+        }
+        else if (e.Key == "Backspace" && string.IsNullOrEmpty(currentInput) && Tokens.Any())
+        {
+            RemoveToken(Tokens.Last());
+        }
+        else
+        {
+            suppressFlag = false;
+        }
+    }
+
+    private void OnTokenClick(string token)
+    {
+        if (IsReadonly)
+        {
+            return;            
+        }
+        RemoveToken(token);
+    }
+
+    private void AddNewToken(string token, string lastChar)
+    {
+        if (string.IsNullOrEmpty(currentInput))
+        {
+            return;
+        }
+        if ((!ExistingOnly || TokensAutocomplete?.Contains(token) == true) && !Tokens.Contains(token))
+        {
+            Tokens.Add(currentInput.Replace(lastChar, string.Empty));
+            suppressFlag = true;
+            currentInput = string.Empty;
+            TokensChanged.InvokeAsync(Tokens);
+        }
+    }
+
+    private void RemoveToken(string token)
+    {
+        if (Tokens.Contains(token))
+        {
+            Tokens.Remove(token);
+            TokensChanged.InvokeAsync(Tokens);
+        }
+    }
+
+    private string GetRootCssClass() => "form-control " + CssClass;
+
+    private string GetTokenItemCssClass() => string.IsNullOrWhiteSpace(TokenItemCssClass) ? "token-item" : TokenItemCssClass;
+}

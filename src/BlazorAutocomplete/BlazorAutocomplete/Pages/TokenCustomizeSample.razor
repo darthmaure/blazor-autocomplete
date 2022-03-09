@@ -1,0 +1,130 @@
+﻿@page "/customize-tokens"
+
+<PageTitle>Tokens Customize Sample</PageTitle>
+
+<h1>Books</h1>
+
+<br />
+
+<style type="text/css">
+    .token-input-transparent {
+        border: none;
+        background-color: transparent;
+    }
+
+    .token-item-small {
+        display: inline-block;
+        padding: 0.75em 0.65em;
+        font-size: 0.8rem;
+        font-weight: 300;
+        line-height: 1;
+        color: #fff;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: 0.2rem;
+        margin-left: 1px;
+        margin-top: 1px;
+        background-color: royalblue;
+    }
+
+    .token-item-small:hover {
+        background-color: #f3a508
+    }
+</style>
+
+
+<div class="list-group">
+    @foreach (var book in Books)
+    {
+        <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">@book.Title</h5>
+                <small>@book.Date.ToString("dd-MM-yyyy")</small>
+            </div>
+            <p class="mb-1">@book.Description</p>
+            <TokenInput IsReadonly="true" @bind-Tokens="book.Tags"
+                    CssClass="token-input-transparent"
+                    TokenItemCssClass="token-item-small" />
+        </a>
+    }
+</div>
+
+
+@code {
+    private const string Lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+
+    private List<Book> Books = new List<Book>
+    {
+        new Book
+        {
+            Title = "The Colour of Magic",
+            Description = Lorem,
+            Date = new DateTime(1983, 12, 24),
+            Tags = new List<string> { "fantasy", "discworld", "Terry Pratchett", "Rincewind" }
+        },
+        new Book
+        {
+            Title = "Guards! Guards!",
+            Description = Lorem,
+            Date = new DateTime(1989, 8, 1),
+            Tags = new List<string> { "fantasy", "discworld", "Terry Pratchett", "Ankh-Morpork", "Samuel Vimes" }
+        },
+        new Book
+        {
+             Title = "Lords and Ladies",
+             Description = Lorem,
+             Date = new DateTime(1992, 12,1),
+             Tags = new List<string> {  "fantasy", "discworld", "Terry Pratchett", "Granny Weatherwax" }
+        },
+        new Book
+        {
+             Title = "The Last Continent",
+             Description = Lorem,
+             Date = new DateTime(1998, 5, 1),
+             Tags = new List<string> {  "fantasy", "discworld", "Terry Pratchett", "Rincewind", "Unseen University"  }
+        },
+        new Book
+        {
+             Title = "A Short History of Nearly Everything",
+             Description = Lorem,
+             Date = new DateTime(2003, 2, 4),
+             Tags = new List<string> {  "Bill Bryson", "popular science" }
+        },
+        new Book
+        {
+             Title = "On Basilisk Station",
+             Description = Lorem,
+             Date = new DateTime(1993, 3, 1),
+             Tags = new List<string> {  "David Weber", "Military science fiction", "Honorverse" }
+        },
+        new Book
+        {
+             Title = "The Short Victorious War",
+             Description = Lorem,
+             Date = new DateTime(1994, 4, 1),
+             Tags = new List<string> { "David Weber", "Military science fiction", "Honorverse" }
+        },
+        new Book
+        {
+             Title = "War of Honor",
+             Description = Lorem,
+             Date = new DateTime(2002, 9, 1),
+             Tags = new List<string> {  "David Weber", "Military science fiction", "Honorverse" }
+        },
+        new Book
+        {
+             Title = "Uncompromising Honor",
+             Description = Lorem,
+             Date = new DateTime(2018, 10, 2),
+             Tags = new List<string> {  "David Weber", "Military science fiction", "Honorverse" }
+        },
+        new Book
+        {
+             Title = "Leviathan Wakes",
+             Description = Lorem,
+             Date = new DateTime(2011, 6, 15),
+             Tags = new List<string> {  "James S. A. Corey", "Science fiction", "The Expanse" }
+        },
+    };
+}

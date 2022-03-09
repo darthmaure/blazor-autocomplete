@@ -1,0 +1,43 @@
+﻿.token-panel-hover {
+    /*border: 1px solid;*/
+    border-color: #007ACC;
+    box-shadow: none !important;
+    outline: none;
+}
+
+.token-item {
+    display: inline-block;
+    padding: 0.75em 0.65em;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.2rem;
+    margin-left: 1px;
+    margin-top: 1px;
+    background-color: royalblue;
+}
+
+    .token-item:hover {
+        background-color: #f3a508
+    }
+
+.token-input {
+    border: none;
+    border-width: 0px;
+    max-width: 100px;
+    margin-left: 1px;
+    font-size: 1rem;
+    font-weight: 400;
+    vertical-align: baseline;
+    padding: 0.75em 0.65em;
+}
+
+    .token-input:focus {
+        border: none;
+        border-width: 0px;
+        outline: none;
+    }
