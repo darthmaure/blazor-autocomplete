@@ -11,7 +11,7 @@ This is a simple text input control based on build-in Blazor `InputText`. The co
 | Placeholder | `string` | `null` | Placeholder |
 | MinTextLength | `int` | `2` | Minimum text length to open autcomplete popup |
 
-###Example
+### Example
 To use the control, simply place it inside `EditForm`:
 ```csharp
 <EditForm Model="@Model">
@@ -35,6 +35,9 @@ public class AutocompleteModel
 }
 ```
 
+![Example - Autocomplete control](https://github.com/darthmaure/blazor-autocomplete/blob/main/src/Images/Autocomplete_demo.gif "Selecting country by typing first letters")
+
+
 ## Token control
 Token control allows to present something I call 'tags'. It is typically a list of string that describe the parent model. I was using similar control in my old WPF projects to tag entries and then to be able to seach the by keywords.
 This control works in two modes
@@ -55,7 +58,7 @@ When in edit mode - use `;`, `Tab` or `Enter` to confirm value from input contro
 |CssClass|`string`|`form-control`|Use this property with name of custom css class to style the root container. By default the container has white backgound and simple thin border|
 |TokenItemCssClass|`string`|`token-item`|Use this param with name of custom css class to style the elements inside the control|
 
-###Example
+### Example
 When in edit mode - place the control inside `EditForm`:
 ```csharp
 <EditForm Model="@Model">
@@ -72,11 +75,15 @@ The minimal code should be like:
 ```
 Where `Book` is a simple POCO class with some `IList<string>` `Tags` property:
 ```csharp
-public class AutocompleteModel
+public class Book
 {
    public IList<string> Tags { get; set; }
 }
 ```
+
+![Example - usage of TokenInput control](https://github.com/darthmaure/blazor-autocomplete/blob/main/src/Images/Tokens_demo.gif "Presenting and adding new tokens with keys: Enter, Tab or ';'")
+
+
 Use custom css classes to style the control (root panel) and the items:
 ```css
 .token-input-transparent {
@@ -111,4 +118,10 @@ Use custom css classes to style the control (root panel) and the items:
         TokenItemCssClass="token-item-small" />
 ```
 
-[IMAGE OF LIST SAMPLE]
+
+![Example - list of books with tags](https://github.com/darthmaure/blazor-autocomplete/blob/main/src/Images/Tokens_on_list_demo.gif "List of books with tags")
+
+
+## Known bugs or things to improve
+* Clicking `Arrow Up` button on Keyboard on `Autocomplete` control popup moves caret to the beginning of input text
+* No `Autocomplete` for `TokenIput` control
