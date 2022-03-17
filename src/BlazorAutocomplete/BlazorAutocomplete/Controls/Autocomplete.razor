@@ -1,28 +1,29 @@
 ﻿@inherits InputText
-
-<input @attributes="AdditionalAttributes" 
-       class="@CssClass" 
-       @bind="Text" 
-       @bind:event="oninput" 
-       @onkeydown="OnKeyDown"
-       @onfocusout="OnLostFocus"
-       placeholder="@Placeholder"
-       aria-autocomplete="list" aria-haspopup="true" autocomplete="off" role="combobox"
-       aria-expanded="true"/>
-@if (autocomplete?.Any() == true)
-{
-    <div class="autocomplete-panel">
-        <ul role="listbox" class="autocomplete-items">
-        @foreach(var item in autocomplete)
-        {
-                var className = item.IsSelected ? "autocomplete-item-hover" : "";
-                <li role="option" class="autocomplete-item @className" 
-                    @onclick="(() => AutocompleteItemClick(item.Text))"
-                    @onmouseover="(() => AutocompleteMouseOver(item.Text))">@item.Text</li>
-        }
-        </ul>
-    </div>
-}
+<div class="autocomplete-root">
+    <input @attributes="AdditionalAttributes"
+           class="@CssClass"
+           @bind="Text"
+           @bind:event="oninput"
+           @onkeydown="OnKeyDown"
+           @onfocusout="OnLostFocus"
+           placeholder="@Placeholder"
+           aria-autocomplete="list" aria-haspopup="true" autocomplete="off" role="combobox"
+           aria-expanded="true" />
+    @if (autocomplete?.Any() == true)
+    {
+        <div class="autocomplete-panel">
+            <ul role="listbox" class="autocomplete-items">
+                @foreach (var item in autocomplete)
+                {
+                    var className = item.IsSelected ? "autocomplete-item-hover" : "";
+                    <li role="option" class="autocomplete-item @className"
+                        @onmousedown="(() => AutocompleteItemClick(item.Text))"
+                        @onmouseover="(() => AutocompleteMouseOver(item.Text))">@item.Text</li>
+                }
+            </ul>
+        </div>
+    }
+</div>
 
 @code {
     [Parameter]
@@ -51,7 +52,7 @@
 
     private void OnKeyDown(KeyboardEventArgs e)
     {
-        if (e.Key == "ArrowDown")         
+        if (e.Key == "ArrowDown")
         {
             SelectNextItem();
         }
@@ -123,7 +124,7 @@
                 var index = autocomplete.IndexOf(currentItem);
                 if (index > 0)
                 {
-                    currentItem.IsSelected = false; 
+                    currentItem.IsSelected = false;
                     autocomplete.ElementAt(index - 1).IsSelected = true;
                 }
             }
@@ -135,7 +136,7 @@
         base.OnParametersSet();
         if (string.IsNullOrEmpty(Text) && base.Value is not null)
         {
-            Text = Value;            
+            Text = Value;
         }
     }
 }

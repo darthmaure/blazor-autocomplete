@@ -121,7 +121,15 @@ Use custom css classes to style the control (root panel) and the items:
 
 ![Example - list of books with tags](https://github.com/darthmaure/blazor-autocomplete/blob/main/src/Images/Tokens_on_list_demo.gif "List of books with tags")
 
+## How to use it
+I am very new to Blazor, so I was unable to make it separated control lib. I will try to do it in some near future.
+For now: simply copy the *.razor and *.razor.css files into your e.g. _Controls_ folder
+
 
 ## Known bugs or things to improve
 * Clicking `Arrow Up` button on Keyboard on `Autocomplete` control popup moves caret to the beginning of input text
 * No `Autocomplete` for `TokenIput` control
+
+## Fixed issues
+* Autocomplete popup now does not move down content below when opened. It overlaps the content (as a popup with higher z-index)
+* Clicking autocomplete item with mouse buton now selects the value inside the input control
